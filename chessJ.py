@@ -107,10 +107,13 @@ def get_piece_moves(board: List[List[int]], x: int, y: int, piece: int = None):
 
 def is_valid_move(board: List[List[int]], fromx: int, fromy: int, tox: int, toy: int):
     cell = board[fromy][fromx]
-    can_move_dest = board[toy][tox] == 0 or (
-        board[toy][tox] <= 6 if cell >= 7 else board[toy][tox] >= 7)
     moves_n, moves_c = get_piece_moves(board, fromx, fromy)
-    can_move_cell = (tox, toy) in moves_n + moves_c
+    if board[toy][tox] == 0:
+        can_move_cell = (tox, toy) in moves_n
+        can_move_dest = True
+    else:
+        can_move_cell = (tox, toy) in moves_c
+        can_move_dest = board[toy][tox] <= 6 if cell >= 7 else board[toy][tox] >= 7
     return can_move_dest and can_move_cell and (
         cell == 3 or cell == 9 or path_valid(board, fromx, fromy, tox, toy))
 
