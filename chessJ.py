@@ -162,7 +162,7 @@ def print_board(board: List[List[int]]) -> None:
     print()
 
 
-def predict_move(board: List[List[int]], model, ai_is_black):
+def get_ai_move(board: List[List[int]], model, ai_is_black):
     predictions: list = model.predict(convert_board(board)).tolist()[0]
     while True:
         position = argmax(predictions)
@@ -227,7 +227,7 @@ def main():
         print_board(board)
     while True:
         # AI
-        fromx, fromy, tox, toy = predict_move(board, model, ai_is_black)
+        fromx, fromy, tox, toy = get_ai_move(board, model, ai_is_black)
         board[toy][tox] = board[fromy][fromx]
         board[fromy][fromx] = 0
         print_board(board)

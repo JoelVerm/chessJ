@@ -1,5 +1,11 @@
 # ChessJ readme
 
+## Play against the AI
+
+To play against the AI, just run `chessJ.py` and follow the instructions in the terminal.
+
+The algorithm at the moment is incapable of recognizing check or checkmate. You have to look for that yourselves. Just type `q` for `quit` or `x` for `exit` to stop the game.
+
 ## Help to train the model
 
 To help train the model, clone this repo locally.
@@ -7,6 +13,8 @@ To help train the model, clone this repo locally.
 You also need the training data. Download it from this link: [https://gomarus-my.sharepoint.com/:u:/g/personal/142584_gomarus_nl/ETd04e0FjqRLhoPR0D1dUy4BGwkZsJlykmbGeBNXI3uhHg?e=9vWqU3](https://gomarus-my.sharepoint.com/:u:/g/personal/142584_gomarus_nl/ETd04e0FjqRLhoPR0D1dUy4BGwkZsJlykmbGeBNXI3uhHg?e=9vWqU3)
 
 Then install tensorflow.
+
+<br>
 
 If you want to, change line 26 in `chessJTrain.py` from:
 
@@ -20,9 +28,24 @@ to
 model = create_model(True)
 ```
 
-to train the advanced version of the model. (Very much appreciated)
+to train the advanced version of the model. (Very much appreciated 😉)
+
+<br>
+
+You can also change the dataset size by modifying line 23 in `chessJTrain.py`:
+
+```python
+train_boards, train_moves, test_boards, test_moves = get_train_data(
+    20000, 5000)
+```
+
+20000 is the train set size, 5000 the test set size.
+
+<br>
 
 Then run `python chessJTrain.py` to train the model.
+
+<br>
 
 After that, move the files `cp.ckpt.data-00000-of-00001` and `cp.ckpt.index` from `./model` to `./model/[simple|advanced]/[Your name]-[Version]`.
 Then create a pull request to return the trained model.
