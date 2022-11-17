@@ -24,7 +24,7 @@ train_boards, train_moves, test_boards, test_moves = get_train_data(
     20000, 5000)
 
 model = create_model()
-model.load_weights("model/cp.ckpt")
+# model.load_weights("model/cp.ckpt")
 
 print('Training...')
 
