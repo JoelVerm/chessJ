@@ -5,3 +5,4 @@
 /moves.json
 /Screenshot (1).png
 /__pycache__
+/model/**/cp.ckpt.data*

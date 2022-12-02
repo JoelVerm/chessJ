@@ -19,6 +19,7 @@ from math import lcm
 from re import L
 from typing import Iterable, List
 from chessJModel import create_model
+from chessJUtil import select_folder
 
 board_size = 8
 
@@ -213,7 +214,8 @@ def main():
         [2, 3, 4, 5, 6, 4, 3, 2]
     ]
     model = create_model()
-    model.load_weights("model/cp.ckpt")
+    model_load_folder = select_folder('model')
+    model.load_weights(f'{model_load_folder}/cp.ckpt')
     ai_is_black = bool(input("Type anything if the AI plays as black: "))
     print('The AI is playing as', 'black' if ai_is_black else 'white')
     print_board(board)
