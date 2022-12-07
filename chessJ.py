@@ -181,24 +181,28 @@ def get_player_move(board: List[List[int]]):
             return None, None, None, None
         if inp.find('quit') >= 0 or inp.find('q') >= 0:
             return None, None, None, None
-        if len(inp) == 4:
-            try:
-                fromx, fromy, tox, toy = inp
-                fromx, fromy, tox, toy = ord(
-                    fromx) - 97, int(fromy) - 1, ord(tox) - 97, int(toy) - 1
-                if (0 <= fromx < board_size and 0 <= fromy < board_size
-                        and 0 <= tox < board_size and 0 <= toy < board_size):
-                    if is_valid_move(board, fromx, fromy, tox, toy):
-                        return fromx, fromy, tox, toy
-                    else:
-                        print(color_text(
-                            f'Invalid input: ({fromx},{fromy}-{tox},{toy}) is not a valid move', 160))
-                else:
-                    print(color_text(
-                        f'Invalid input: position ({fromx},{fromy}-{tox},{toy}) not on the board', 160))
-            except ValueError:
-                print(color_text('Invalid input: input has the wrong size', 160))
-                print('Format moves as a1a2')
+        if len(inp) != 4:
+            print(color_text('Invalid input: input has the wrong size', 160))
+            print('Format moves as a1a2')
+            continue
+        try:
+            fromx, fromy, tox, toy = inp
+            fromx, fromy, tox, toy = ord(
+                fromx) - 97, int(fromy) - 1, ord(tox) - 97, int(toy) - 1
+            if not (0 <= fromx < board_size and 0 <= fromy < board_size
+                    and 0 <= tox < board_size and 0 <= toy < board_size):
+                print(color_text(
+                    f'Invalid input: position ({fromx},{fromy}-{tox},{toy}) not on the board', 160))
+                continue
+            if not is_valid_move(board, fromx, fromy, tox, toy):
+                print(color_text(
+                    f'Invalid input: ({fromx},{fromy}-{tox},{toy}) is not a valid move', 160))
+                continue
+            else:
+                return fromx, fromy, tox, toy
+        except ValueError:
+            print(color_text('Invalid input: input has the wrong size', 160))
+            print('Format moves as a1a2')
 
 
 def main():
