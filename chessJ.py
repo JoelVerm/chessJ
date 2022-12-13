@@ -19,7 +19,7 @@ from math import lcm
 from re import L
 from typing import Iterable, List
 from chessJModel import create_model
-from chessJUtil import select_folder
+from chessJUtil import input_int, select_folder
 
 board_size = 8
 
@@ -78,12 +78,12 @@ def get_piece_moves(board: List[List[int]], x: int, y: int, piece: int = None):
             if y == 6:
                 return ((x, y - 2), (x, y - 1)), ((x - 1, y - 1), (x + 1, y - 1))
             else:
-                return ((x, y - 1)), ((x - 1, y - 1), (x + 1, y - 1))
+                return ((x, y - 1),), ((x - 1, y - 1), (x + 1, y - 1))
         case 7:  # * black pawn
             if y == 1:
                 return ((x, y + 2), (x, y + 1)), ((x - 1, y + 1), (x + 1, y + 1))
             else:
-                return ((x, y + 1)), ((x - 1, y + 1), (x + 1, y + 1))
+                return ((x, y + 1),), ((x - 1, y + 1), (x + 1, y + 1))
         case 2 | 8:  # * rook
             return (tuple((x, i) for i in range(board_size))
                     + tuple((i, y) for i in range(board_size)),) * 2
@@ -115,8 +115,9 @@ def is_valid_move(board: List[List[int]], fromx: int, fromy: int, tox: int, toy:
     else:
         can_move_cell = (tox, toy) in moves_c
         can_move_dest = board[toy][tox] <= 6 if cell >= 7 else board[toy][tox] >= 7
-    return can_move_dest and can_move_cell and (
-        cell == 3 or cell == 9 or path_valid(board, fromx, fromy, tox, toy))
+    can_move_path = cell == 3 or cell == 9 or path_valid(
+        board, fromx, fromy, tox, toy)
+    return can_move_dest and can_move_cell and can_move_path
 
 
 def convert_board(board: List[List[int]]):
@@ -163,6 +164,10 @@ def print_board(board: List[List[int]]) -> None:
     print()
 
 
+def move_to_str(fromx, fromy, tox, toy):
+    return f'{chr(fromx + 97)}{fromy+1}{chr(tox + 97)}{toy+1}'
+
+
 def get_ai_move(board: List[List[int]], model, ai_is_black):
     predictions: list = model.predict(convert_board(board)).tolist()[0]
     while True:
@@ -192,11 +197,11 @@ def get_player_move(board: List[List[int]]):
             if not (0 <= fromx < board_size and 0 <= fromy < board_size
                     and 0 <= tox < board_size and 0 <= toy < board_size):
                 print(color_text(
-                    f'Invalid input: position ({fromx},{fromy}-{tox},{toy}) not on the board', 160))
+                    f'Invalid input: position {move_to_str(fromx, fromy, tox, toy)} is not on the board', 160))
                 continue
             if not is_valid_move(board, fromx, fromy, tox, toy):
                 print(color_text(
-                    f'Invalid input: ({fromx},{fromy}-{tox},{toy}) is not a valid move', 160))
+                    f'Invalid input: {move_to_str(fromx, fromy, tox, toy)} is not a valid move', 160))
                 continue
             else:
                 return fromx, fromy, tox, toy
@@ -217,7 +222,9 @@ def main():
         [1, 1, 1, 1, 1, 1, 1, 1],
         [2, 3, 4, 5, 6, 4, 3, 2]
     ]
-    model = create_model()
+    create_advanced = input_int(
+        'choose the level of the model to run (0-1): ')
+    model = create_model(create_advanced == 1)
     model_load_folder = select_folder('model')
     model.load_weights(f'{model_load_folder}/cp.ckpt')
     ai_is_black = bool(input("Type anything if the AI plays as black: "))
@@ -234,6 +241,7 @@ def main():
     while True:
         # AI
         fromx, fromy, tox, toy = get_ai_move(board, model, ai_is_black)
+        print(f'the AI chose the move {move_to_str(fromx, fromy, tox, toy)}')
         board[toy][tox] = board[fromy][fromx]
         board[fromy][fromx] = 0
         print_board(board)
