@@ -28,7 +28,7 @@ train_boards, train_moves, test_boards, test_moves = get_train_data(
     train_set_size, test_set_size)
 
 create_advanced = input_int('choose the level of the model to train (0-1): ')
-model = create_model()
+model = create_model(create_advanced == 1)
 if input('do you want to load an existing model? (y/n): ') == 'y':
     model_load_folder = select_folder('model')
     model.load_weights(f'{model_load_folder}/cp.ckpt')
