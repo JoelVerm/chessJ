@@ -60,7 +60,7 @@ def get_boards_moves(winner_index, moves):
     return _boards, _moves
 
 
-def get_train_data(train_len, test_len):
+def get_train_data(train_len=None, test_len=None):
     temp = []
     for i, round in enumerate(json_moves):
         progress('Creating data', i, len(json_moves))
@@ -72,8 +72,12 @@ def get_train_data(train_len, test_len):
             temp.append(get_boards_moves(1, moves))
 
     print('\nSampling data...')
-    train = random.sample(temp, train_len)
-    test = random.sample(temp, test_len)
+    if (train_len is not None) and (test_len is not None):
+        train = random.sample(temp, train_len)
+        test = random.sample(temp, test_len)
+    else:
+        train = temp
+        test = random.sample(temp, len(temp) / 10)
     print('Converting data...')
     train_boards = []
     train_moves = []

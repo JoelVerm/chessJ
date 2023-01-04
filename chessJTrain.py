@@ -21,11 +21,14 @@ from chessJUtil import input_int, select_folder
 import tensorflow as tf
 import os
 
-train_set_size = input_int('choose the train set size (~5000-200000): ')
-test_set_size = input_int('choose the test set size (~2000-50000): ')
-
-train_boards, train_moves, test_boards, test_moves = get_train_data(
-    train_set_size, test_set_size)
+train_set_size = input_int(
+    'choose the train set size (~5000-200000) or 0 to train on all: ')
+if train_set_size == 0:
+    train_boards, train_moves, test_boards, test_moves = get_train_data()
+else:
+    test_set_size = input_int('choose the test set size (~2000-50000): ')
+    train_boards, train_moves, test_boards, test_moves = get_train_data(
+        train_set_size, test_set_size)
 
 create_advanced = input_int('choose the level of the model to train (0-1): ')
 model = create_model(create_advanced == 1)
