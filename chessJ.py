@@ -60,7 +60,9 @@ def path_valid(board: List[List[int]], fromx: int, fromy: int, tox: int, toy: in
     stepy = dy // step
     fromy += stepy
     fromx += stepx
-    while fromy != toy or fromx != tox:
+    while (fromy != toy or fromx != tox):
+        if not (fromy >= 0 and fromx >= 0 and fromy < board_size and fromx < board_size):
+            return False
         if board[fromy][fromx]:
             return False
         fromy += stepy
@@ -156,16 +158,16 @@ def print_board(board: List[List[int]]) -> None:
     print('    a   b   c   d   e   f   g   h  ')
     print('  ---------------------------------')
     for i, row in enumerate(board):
-        print(f'{i+1} |', end='')
+        print(f'{8 - i} |', end='')
         for cell in row:
             print(f' {get_piece_repr(cell)} ', end='|')
-        print(f' {i+1}\n  ---------------------------------')
+        print(f' {8 - i}\n  ---------------------------------')
     print('    a   b   c   d   e   f   g   h  ')
     print()
 
 
 def move_to_str(fromx, fromy, tox, toy):
-    return f'{chr(fromx + 97)}{fromy+1}{chr(tox + 97)}{toy+1}'
+    return f'{chr(fromx + 97)}{8 - fromy}{chr(tox + 97)}{8 - toy}'
 
 
 def get_ai_move(board: List[List[int]], model, ai_is_black):
@@ -193,7 +195,7 @@ def get_player_move(board: List[List[int]]):
         try:
             fromx, fromy, tox, toy = inp
             fromx, fromy, tox, toy = ord(
-                fromx) - 97, int(fromy) - 1, ord(tox) - 97, int(toy) - 1
+                fromx) - 97, 8 - int(fromy), ord(tox) - 97, 8 - int(toy)
             if not (0 <= fromx < board_size and 0 <= fromy < board_size
                     and 0 <= tox < board_size and 0 <= toy < board_size):
                 print(color_text(

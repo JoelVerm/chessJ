@@ -46,7 +46,7 @@ void loop()
                 Serial.print(' ');
                 Serial.print(x);
                 Serial.print(' ');
-                Serial.println(value);
+                Serial.println(int(value));
             }
             boardState[y][x] = value;
         }
