@@ -18,7 +18,7 @@ print("""
 from math import lcm
 from typing import Iterable, List
 from chessJModel import create_model
-from chessJUtil import input_int, select_folder
+from chessJUtil import input_int, select_folder, iter_path
 
 board_size = 8
 
@@ -47,7 +47,7 @@ def argmax(x: Iterable):
     return max(range(len(x)), key=lambda i: x[i])
 
 
-def path_valid(board: List[List[int]], fromx: int, fromy: int, tox: int, toy: int):
+def path_valid_old(board: List[List[int]], fromx: int, fromy: int, tox: int, toy: int):
     if fromx == tox and fromy == toy:
         return False
     dy = toy - fromy
@@ -67,6 +67,15 @@ def path_valid(board: List[List[int]], fromx: int, fromy: int, tox: int, toy: in
             return False
         fromy += stepy
         fromx += stepx
+    return True
+
+
+def path_valid(board: List[List[int]], fromx: int, fromy: int, tox: int, toy: int):
+    for x, y in iter_path(fromx, fromy, tox, toy):
+        if not (y >= 0 and x >= 0 and y < board_size and x < board_size):
+            return False
+        if board[y][x]:
+            return False
     return True
 
 
@@ -116,17 +125,34 @@ def find_2d_list(l2d, item):
     return -1, -1
 
 
-def is_king_in_danger(board: List[List[int]], king_value: int) -> List[bool, list]:
-    y, x = find_2d_list(board, king_value)
+def get_king_dangers(board: List[List[int]], kingX: int, kingY: int):
     dangers = []
     for p in range(1, 17):
-        moves_n, moves_c = get_piece_moves(board, y, x, p)
+        moves_n, moves_c = get_piece_moves(board, kingX, kingY, p)
         for mx, my in moves_c:
-            ax, ay = mx + x, my + y
+            ax, ay = mx + kingX, my + kingY
             if 0 <= ax < board_size and 0 <= ay < board_size:
                 if board[ay][ax] == p:
                     dangers.append([p, ax, ay])
-    return [len(dangers) > 0, dangers]
+    return dangers
+
+
+def move_keeps_king_safe(board: List[List[int]], king_value: int, cell: int, fromx: int, fromy: int, tox: int, toy: int) -> bool:
+    ky, kx = find_2d_list(board, king_value)
+    dangers = get_king_dangers(board, kx, ky)
+    if not dangers:
+        return True
+    if cell != king_value:
+        for piece, ax, ay in dangers:
+            for x, y in iter_path(kx, ky, ax, ay):
+                if tox == x and toy == y:
+                    break
+                else:
+                    return False
+        return True
+    else:
+        new_dangers = get_king_dangers(board, tox, toy)
+        return len(new_dangers) == 0
 
 
 def is_valid_move(board: List[List[int]], fromx: int, fromy: int, tox: int, toy: int):
@@ -140,7 +166,8 @@ def is_valid_move(board: List[List[int]], fromx: int, fromy: int, tox: int, toy:
         can_move_dest = board[toy][tox] <= 6 if cell >= 7 else board[toy][tox] >= 7
     can_move_path = cell == 3 or cell == 9 or path_valid(
         board, fromx, fromy, tox, toy)
-    king_saved = is_king_in_danger(board, 6 if cell < 7 else 12)
+    king_saved = move_keeps_king_safe(
+        board, 6 if cell < 7 else 12, cell, fromx, fromy, tox, toy)
     return can_move_dest and can_move_cell and can_move_path and king_saved
 
 
