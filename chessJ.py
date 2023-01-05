@@ -1,30 +1,30 @@
 print("""
-                                                                                                                        
-                                                                                                                        
-       ............************                                                                                         
-       ............************                                                                                         
-       ............************           ******,     **     **    **********    *******     *******       .......      
-       ............************         ***     **    **     **    **           **     **   **     **           ..      
-       ............************         **.           **     **    **           **          **                  ..      
-      ************............          **.           *********    *********     *******     *******            ..      
-      ************............          **.           **     **    **                  **          **           ..      
-      ************............           **    ***    **     **    **           **     **   **     **   ...    ...      
-      ************............            ******      **     **    **********    *******     *******      ......        
-      ************                                                                                                      
-                                                                                                                        
-                                                                                                                        
+
+
+       ............************
+       ............************
+       ............************           ******,     **     **    **********    *******     *******       .......
+       ............************         ***     **    **     **    **           **     **   **     **           ..
+       ............************         **.           **     **    **           **          **                  ..
+      ************............          **.           *********    *********     *******     *******            ..
+      ************............          **.           **     **    **                  **          **           ..
+      ************............           **    ***    **     **    **           **     **   **     **   ...    ...
+      ************............            ******      **     **    **********    *******     *******      ......
+      ************
+
+
 """)
 
 from math import lcm
-from re import L
 from typing import Iterable, List
 from chessJModel import create_model
 from chessJUtil import input_int, select_folder
 
 board_size = 8
 
-moves_conv_tbl = {(fromx * board_size**3 + fromy *
-                  board_size**2 + tox * board_size + toy):
+moves_conv_tbl = {(fromx * board_size**3
+                   + fromy * board_size**2
+                   + tox * board_size + toy):
                   (fromx, fromy, tox, toy) for fromx in range(
     board_size) for fromy in range(board_size)
     for tox in range(board_size)
@@ -108,6 +108,27 @@ def get_piece_moves(board: List[List[int]], x: int, y: int, piece: int = None):
             ) if 0 <= e[0] < board_size and 0 <= e[1] < board_size),) * 2
 
 
+def find_2d_list(l2d, item):
+    for y, l1d in enumerate(l2d):
+        for x, i in enumerate(l1d):
+            if i == item:
+                return y, x
+    return -1, -1
+
+
+def is_king_in_danger(board: List[List[int]], king_value: int) -> List[bool, list]:
+    y, x = find_2d_list(board, king_value)
+    dangers = []
+    for p in range(1, 17):
+        moves_n, moves_c = get_piece_moves(board, y, x, p)
+        for mx, my in moves_c:
+            ax, ay = mx + x, my + y
+            if 0 <= ax < board_size and 0 <= ay < board_size:
+                if board[ay][ax] == p:
+                    dangers.append([p, ax, ay])
+    return [len(dangers) > 0, dangers]
+
+
 def is_valid_move(board: List[List[int]], fromx: int, fromy: int, tox: int, toy: int):
     cell = board[fromy][fromx]
     moves_n, moves_c = get_piece_moves(board, fromx, fromy)
@@ -119,7 +140,8 @@ def is_valid_move(board: List[List[int]], fromx: int, fromy: int, tox: int, toy:
         can_move_dest = board[toy][tox] <= 6 if cell >= 7 else board[toy][tox] >= 7
     can_move_path = cell == 3 or cell == 9 or path_valid(
         board, fromx, fromy, tox, toy)
-    return can_move_dest and can_move_cell and can_move_path
+    king_saved = is_king_in_danger(board, 6 if cell < 7 else 12)
+    return can_move_dest and can_move_cell and can_move_path and king_saved
 
 
 def convert_board(board: List[List[int]]):
