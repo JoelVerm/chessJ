@@ -276,7 +276,8 @@ def main():
     create_advanced = input_int(
         'choose the level of the model to run (0-1): ')
     model = create_model(create_advanced == 1)
-    model_load_folder = select_folder('model')
+    model_load_folder = select_folder(
+        'model/cache/' + ('advanced' if create_advanced == 1 else 'simple'))
     model.load_weights(f'{model_load_folder}/cp.ckpt')
     ai_is_black = bool(input("Type anything if the AI plays as black: "))
     print('The AI is playing as', 'black' if ai_is_black else 'white')

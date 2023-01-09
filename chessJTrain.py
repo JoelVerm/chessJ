@@ -33,7 +33,8 @@ else:
 create_advanced = input_int('choose the level of the model to train (0-1): ')
 model = create_model(create_advanced == 1)
 if input('do you want to load an existing model? (y/n): ') == 'y':
-    model_load_folder = select_folder('model')
+    model_load_folder = select_folder(
+        'model/cache/' + ('advanced' if create_advanced == 1 else 'simple'))
     model.load_weights(f'{model_load_folder}/cp.ckpt')
 
 print('Select a folder to save the model to')
