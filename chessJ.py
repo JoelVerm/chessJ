@@ -261,7 +261,7 @@ def get_player_move(board: List[List[int]]):
             print('Format moves as a1a2')
 
 
-def main():
+def main(get_player_move, ai_callback_move):
     print('Starting the AI...')
     board = [
         [8, 9, 10, 11, 12, 10, 9, 8],
@@ -294,6 +294,7 @@ def main():
         # AI
         fromx, fromy, tox, toy = get_ai_move(board, model, ai_is_black)
         print(f'the AI chose the move {move_to_str(fromx, fromy, tox, toy)}')
+        ai_callback_move(fromx, fromy, tox, toy)
         board[toy][tox] = board[fromy][fromx]
         board[fromy][fromx] = 0
         print_board(board)
@@ -307,4 +308,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    def empty_ai_callback_move(fx, fy, tx, ty):
+        pass
+    main(get_player_move, empty_ai_callback_move)
