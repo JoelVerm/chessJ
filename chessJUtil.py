@@ -14,7 +14,9 @@ def input_int(text=''):
 
 def select_folder(path='.'):
     folders = []
-    for root, dirs, files in os.walk(path):
+    for root, dirs, files in os.walk(os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), path
+    )):
         if not dirs:
             folders.append(root)
     for i, folder in enumerate(folders):
