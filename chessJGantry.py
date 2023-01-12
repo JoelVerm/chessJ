@@ -127,6 +127,28 @@ class ChessBoardGantry:
         percentY = self.toPercentage(cellY)
         self.gantry.move(percentX, percentY)
 
+    def movePiece(self, fromx, fromy, tox, toy):
+        self.moveToCell(fromx, fromy)
+        self.magnet.on()
+        dx = tox - fromx
+        dy = toy - fromy
+        if dx and dy:
+            if abs(dx) == abs(dy):
+                self.moveToCell(tox, toy)
+            elif dx == 1 or dx == -1:
+                halfStep = 0.5 if dx > 0 else -0.5
+                self.moveToCell(fromx + halfStep, fromy)
+                self.moveToCell(fromx + halfStep, toy)
+                self.moveToCell(tox, toy)
+            elif dy == 1 or dy == -1:
+                halfStep = 0.5 if dy > 0 else -0.5
+                self.moveToCell(fromx, fromy + halfStep)
+                self.moveToCell(tox, fromy + halfStep)
+                self.moveToCell(tox, toy)
+        else:
+            self.moveToCell(tox, toy)
+        self.magnet.off()
+
 
 def createGantry():
     return ChessBoardGantry(

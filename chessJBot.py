@@ -1,4 +1,5 @@
 from chessJ import main as chessJ
+from chessJGantry import createGantry
 
 
 def get_move():
@@ -6,7 +7,8 @@ def get_move():
 
 
 def move_callback(fromx, fromy, tox, toy):
-    pass
+    gantry.movePiece(fromx, fromy, tox, toy)
 
 
+gantry = createGantry()
 chessJ(get_move, move_callback)
