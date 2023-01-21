@@ -28,6 +28,7 @@ void setup()
         for (RANGE(x, boardWidth))
         {
             pinMode(boardPins[y][x], INPUT);
+            boardState[y][x] = digitalRead(boardPins[y][x]);
         }
     }
 }
