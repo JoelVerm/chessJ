@@ -125,21 +125,20 @@ def find_2d_list(l2d, item):
     return -1, -1
 
 
-def get_king_dangers(board: List[List[int]], kingX: int, kingY: int):
+def get_king_dangers(board: List[List[int]], king_value: int, kingX: int, kingY: int):
     dangers = []
-    for p in range(1, 17):
+    for p in (range(7, 13) if king_value == 6 else range(1, 7)):
         moves_n, moves_c = get_piece_moves(board, kingX, kingY, p)
         for mx, my in moves_c:
-            ax, ay = mx + kingX, my + kingY
-            if 0 <= ax < board_size and 0 <= ay < board_size:
-                if board[ay][ax] == p:
-                    dangers.append([p, ax, ay])
+            if 0 <= mx < board_size and 0 <= my < board_size:
+                if board[my][mx] == p:
+                    dangers.append([p, mx, my])
     return dangers
 
 
 def move_keeps_king_safe(board: List[List[int]], king_value: int, cell: int, fromx: int, fromy: int, tox: int, toy: int) -> bool:
     ky, kx = find_2d_list(board, king_value)
-    dangers = get_king_dangers(board, kx, ky)
+    dangers = get_king_dangers(board, king_value, kx, ky)
     if not dangers:
         return True
     if cell != king_value:
