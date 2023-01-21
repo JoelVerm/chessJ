@@ -3,7 +3,7 @@ from serial import Serial
 import socket
 
 
-HOST = 'joelv@LaptopJoel'
+HOST = 'LaptopJoel'
 PORT = 12321
 pcSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 pcSocket.connect((HOST, PORT))

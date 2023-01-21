@@ -1,7 +1,7 @@
 from chessJ import main as chessJ
 import socket
 
-HOST = 'joelv@LaptopJoel'
+HOST = 'LaptopJoel'
 PORT = 12321
 piSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
