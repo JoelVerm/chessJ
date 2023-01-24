@@ -68,7 +68,7 @@ class Stepper:
 
 
 class Gantry:
-    def __init__(self, stepper1: Stepper, stepper2: Stepper, stopper11: Button, stopper12: Button, stopper21: Button, stopper22: Button, speed=5):
+    def __init__(self, stepper1: Stepper, stepper2: Stepper, stopper11: Button, stopper12: Button, stopper21: Button, stopper22: Button, speed=5, resolution: Stepper.Resolutions = Stepper.Resolutions.One):
         self.stepper1 = stepper1
         self.stepper2 = stepper2
         self.stopper11 = stopper11
@@ -76,20 +76,22 @@ class Gantry:
         self.stopper21 = stopper21
         self.stopper22 = stopper22
         self.speed = speed
+        self.resolution = resolution
 
     def initialize(self):
         speed = 2
-        self.stepper1.move(-10e30, speed)
+        resolution = Stepper.Resolutions.Four
+        self.stepper1.move(-10e30, speed, resolution)
         self.stopper11.wait_for_active()
         self.stepper1.stop()
-        self.stepper1.move(10e30, speed)
+        self.stepper1.move(10e30, speed, resolution)
         self.stopper12.wait_for_active()
         self.rangeX = self.stepper1.stop()
         self.posX = self.rangeX
-        self.stepper2.move(-10e30, speed)
+        self.stepper2.move(-10e30, speed, resolution)
         self.stopper21.wait_for_active()
         self.stepper2.stop()
-        self.stepper2.move(10e30, speed)
+        self.stepper2.move(10e30, speed, resolution)
         self.stopper22.wait_for_active()
         self.rangeY = self.stepper2.stop()
         self.posY = self.rangeY
@@ -102,8 +104,8 @@ class Gantry:
         pointsY = self.rangeY * (percentY / 100)
         moveX = pointsX - self.posX
         moveY = pointsY - self.posY
-        self.stepper1.move(moveX, self.speed)
-        self.stepper2.move(moveY, self.speed)
+        self.stepper1.move(moveX, self.speed, self.resolution)
+        self.stepper2.move(moveY, self.speed, self.resolution)
         while self.stepper1.running or self.stepper2.running:
             sleep(0.05)
         self.posX += moveX
