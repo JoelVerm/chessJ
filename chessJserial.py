@@ -19,7 +19,8 @@ def get_move():
 
 
 def move_callback(fromx, fromy, tox, toy, capture):
-    msg = f'{'capture' if capture else 'move'} {fromx} {fromy} {tox} {toy}\n'.encode('utf-8')
+    msg = f'{"capture" if capture else "move"} {fromx} {fromy} {tox} {toy}\n'.encode(
+        'utf-8')
     connection.send(msg)
     connection.recv(1024)
 

@@ -68,7 +68,7 @@ class Stepper:
 
 
 class Gantry:
-    def __init__(self, stepper1: Stepper, stepper2: Stepper, rangeX: int, rangeY: int , speed=1000, resolution: Stepper.Resolutions = Stepper.Resolutions.Eight):
+    def __init__(self, stepper1: Stepper, stepper2: Stepper, rangeX: int, rangeY: int, speed=1000, resolution: Stepper.Resolutions = Stepper.Resolutions.Eight):
         self.stepper1 = stepper1
         self.stepper2 = stepper2
         self.rangeX = rangeX
@@ -130,6 +130,7 @@ class ChessBoardGantry:
 
     def removePiece(self, x, y):
         self.movePiece(x, y, self.removeX, self.removeY)
+
 
 def createGantry():
     return ChessBoardGantry(
