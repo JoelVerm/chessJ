@@ -38,7 +38,7 @@ while True:
         fx, fy, tx, ty = get_move()
         res = f'{fx} {fy} {tx} {ty}\n'.encode('utf-8')
         pcSocket.send(res)
-    elif parts[0] == 'do':
+    elif parts[0] == 'move':
         move_callback(int(parts[1]), int(parts[2]),
                       int(parts[3]), int(parts[4]))
         pcSocket.send('\n')

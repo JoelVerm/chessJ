@@ -19,7 +19,7 @@ def get_move():
 
 
 def move_callback(fromx, fromy, tox, toy):
-    msg = f'do {fromx} {fromy} {tox} {toy}\n'.encode('utf-8')
+    msg = f'move {fromx} {fromy} {tox} {toy}\n'.encode('utf-8')
     connection.send(msg)
     connection.recv(1024)
 
