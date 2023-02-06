@@ -97,7 +97,6 @@ class ChessBoardGantry:
     def __init__(self, gantry: Gantry, magnet: OutputDevice):
         self.gantry = gantry
         self.magnet = magnet
-        gantry.initialize()
 
     def toPercentage(self, cell: int):
         return (100 // 16) + cell * (100 // 8)
@@ -137,5 +136,5 @@ def createGantry():
             Stepper(2, 3, 14, 15, 18),
             1000, 1000
         ),
-        OutputDevice(13)
+        OutputDevice(25)
     )
