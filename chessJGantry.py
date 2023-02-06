@@ -1,6 +1,6 @@
 import threading
 from time import sleep
-from gpiozero import OutputDevice, Button
+from gpiozero import OutputDevice
 
 
 class Stepper:
@@ -92,7 +92,7 @@ class Gantry:
 
 
 class ChessBoardGantry:
-    def __init__(self, gantry: Gantry, magnet: OutputDevice, removeX, removeY):
+    def __init__(self, gantry: Gantry, magnet: OutputDevice, removeX: float, removeY: float):
         self.gantry = gantry
         self.magnet = magnet
         self.removeX = removeX
@@ -139,5 +139,6 @@ def createGantry():
             Stepper(2, 3, 14, 15, 18),
             1000, 1000
         ),
-        OutputDevice(25)
+        OutputDevice(25),
+        -0.3, 5
     )
