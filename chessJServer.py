@@ -5,9 +5,13 @@ HOST = 'LaptopJoel'
 PORT = 12321
 piSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+print('Waiting for connection with RPi...')
+
 piSocket.bind((HOST, PORT))
 piSocket.listen(5)
 connection, address = piSocket.accept()
+
+print('Connected')
 
 
 def get_move():
