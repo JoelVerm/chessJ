@@ -68,34 +68,15 @@ class Stepper:
 
 
 class Gantry:
-    def __init__(self, stepper1: Stepper, stepper2: Stepper, stopper11: Button, stopper12: Button, stopper21: Button, stopper22: Button, speed=5, resolution: Stepper.Resolutions = Stepper.Resolutions.One):
+    def __init__(self, stepper1: Stepper, stepper2: Stepper, rangeX: int, rangeY: int , speed=1000, resolution: Stepper.Resolutions = Stepper.Resolutions.Eight):
         self.stepper1 = stepper1
         self.stepper2 = stepper2
-        self.stopper11 = stopper11
-        self.stopper12 = stopper12
-        self.stopper21 = stopper21
-        self.stopper22 = stopper22
+        self.rangeX = rangeX
+        self.rangeY = rangeY
         self.speed = speed
         self.resolution = resolution
-
-    def initialize(self):
-        speed = 2
-        resolution = Stepper.Resolutions.Four
-        self.stepper1.move(-10e30, speed, resolution)
-        self.stopper11.wait_for_active()
-        self.stepper1.stop()
-        self.stepper1.move(10e30, speed, resolution)
-        self.stopper12.wait_for_active()
-        self.rangeX = self.stepper1.stop()
-        self.posX = self.rangeX
-        self.stepper2.move(-10e30, speed, resolution)
-        self.stopper21.wait_for_active()
-        self.stepper2.stop()
-        self.stepper2.move(10e30, speed, resolution)
-        self.stopper22.wait_for_active()
-        self.rangeY = self.stepper2.stop()
-        self.posY = self.rangeY
-        self.move(0, 0)
+        self.posX = 0
+        self.posY = 0
 
     def move(self, percentX: int, percentY: int):
         if not (0 <= percentX <= 100 and 0 <= percentY <= 100):
@@ -152,10 +133,9 @@ class ChessBoardGantry:
 def createGantry():
     return ChessBoardGantry(
         Gantry(
-            Stepper(1, 2, 3, 4, 14),
-            Stepper(5, 6, 7, 8, 15),
-            Button(9),
-            Button(10),
-            Button(11),
-            Button(12)),
-        OutputDevice(13))
+            Stepper(5, 6, 13, 19, 26),
+            Stepper(2, 3, 14, 15, 18),
+            1000, 1000
+        ),
+        OutputDevice(13)
+    )
