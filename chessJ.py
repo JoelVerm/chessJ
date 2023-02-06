@@ -293,7 +293,7 @@ def main(get_player_move, ai_callback_move):
         # AI
         fromx, fromy, tox, toy = get_ai_move(board, model, ai_is_black)
         print(f'the AI chose the move {move_to_str(fromx, fromy, tox, toy)}')
-        ai_callback_move(fromx, fromy, tox, toy)
+        ai_callback_move(fromx, fromy, tox, toy, bool(board[toy][tox]))
         board[toy][tox] = board[fromy][fromx]
         board[fromy][fromx] = 0
         print_board(board)
@@ -307,6 +307,6 @@ def main(get_player_move, ai_callback_move):
 
 
 if __name__ == '__main__':
-    def empty_ai_callback_move(fx, fy, tx, ty):
+    def empty_ai_callback_move(fx, fy, tx, ty, capture):
         pass
     main(get_player_move, empty_ai_callback_move)

@@ -79,8 +79,6 @@ class Gantry:
         self.posY = 0
 
     def move(self, percentX: int, percentY: int):
-        if not (0 <= percentX <= 100 and 0 <= percentY <= 100):
-            raise ValueError('percentX and percentY must be in range [0, 100]')
         pointsX = self.rangeX * (percentX / 100)
         pointsY = self.rangeY * (percentY / 100)
         moveX = pointsX - self.posX
@@ -94,9 +92,11 @@ class Gantry:
 
 
 class ChessBoardGantry:
-    def __init__(self, gantry: Gantry, magnet: OutputDevice):
+    def __init__(self, gantry: Gantry, magnet: OutputDevice, removeX, removeY):
         self.gantry = gantry
         self.magnet = magnet
+        self.removeX = removeX
+        self.removeY = removeY
 
     def toPercentage(self, cell: int):
         return (100 // 16) + cell * (100 // 8)
@@ -128,6 +128,8 @@ class ChessBoardGantry:
             self.moveToCell(tox, toy)
         self.magnet.off()
 
+    def removePiece(self, x, y):
+        self.movePiece(x, y, self.removeX, self.removeY)
 
 def createGantry():
     return ChessBoardGantry(

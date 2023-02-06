@@ -21,7 +21,9 @@ def get_move():
     return fx, fy, tx, ty
 
 
-def move_callback(fromx, fromy, tox, toy):
+def move_callback(fromx, fromy, tox, toy, capture):
+    if capture:
+        gantry.removePiece(tox, toy)
     gantry.movePiece(fromx, fromy, tox, toy)
 
 
@@ -38,7 +40,7 @@ while True:
         fx, fy, tx, ty = get_move()
         res = f'{fx} {fy} {tx} {ty}\n'.encode('utf-8')
         pcSocket.send(res)
-    elif parts[0] == 'move':
+    elif parts[0] == 'move' or parts[0] == 'capture':
         move_callback(int(parts[1]), int(parts[2]),
-                      int(parts[3]), int(parts[4]))
+                      int(parts[3]), int(parts[4]), parts[0] == 'capture')
         pcSocket.send('\n')
