@@ -26,4 +26,6 @@ def move_callback(fromx, fromy, tox, toy):
 
 chessJ(get_move, move_callback)
 
+connection.send('q')
+
 connection.close()
