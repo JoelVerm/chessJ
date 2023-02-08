@@ -1,35 +1,22 @@
 import threading
 from time import sleep
 from gpiozero import OutputDevice
+from RpiMotorLib import RpiMotorLib
 
 
 class Stepper:
-    class Resolutions:
-        One = (0, 0, 0, 1),
-        Two = (1, 0, 0, 2),
-        Four = (0, 1, 0, 4),
-        Eight = (1, 1, 0, 8),
-        Sixteen = (0, 0, 1, 16),
-        Thirty_two = (1, 0, 1, 32)
-
-    def __init__(self, directionPin, stepPin, resPin1, resPin2, resPin3):
-        self.directionPin = OutputDevice(directionPin)
-        self.stepPin = OutputDevice(stepPin)
-        self.resPin1 = OutputDevice(resPin1)
-        self.resPin2 = OutputDevice(resPin2)
-        self.resPin3 = OutputDevice(resPin3)
-        self.stepsDone = 0
+    def __init__(self, pin1, pin2, pin3, pin4):
+        self.motor = RpiMotorLib.BYJMotor("Motor1", "Nema")
+        self.pins = [pin1, pin2, pin3, pin4]
         self.running = False
-        self.mustRun = False
         self.thread = None
 
     def stop(self):
         if self.running and self.thread:
-            self.mustRun = False
+            self.motor.motor_stop()
             self.thread.join()
-        return self.stepsDone
 
-    def move(self, points: int, speed: int, resolution: Resolutions):
+    def move(self, points: int, speed: int):
         if self.running:
             self.stop()
         if points == 0:
@@ -37,44 +24,23 @@ class Stepper:
 
         self.running = True
         self.thread = threading.Thread(
-            target=self.moveSync, args=(points, speed, resolution))
+            target=self.moveSync, args=(points, speed))
         self.thread.daemon = True
         self.thread.start()
 
-    def writePin(pin: OutputDevice, value: bool):
-        if value:
-            pin.on()
-        else:
-            pin.off()
-
-    def moveSync(self, points: int, speed: int, resolution: Resolutions):
-        delay = 1 / speed / 2 / resolution[3]
-        self.writePin(self.directionPin, points >= 0)
-        self.writePin(self.resPin1, resolution[0])
-        self.writePin(self.resPin2, resolution[1])
-        self.writePin(self.resPin3, resolution[2])
-        self.stepsDone = 0
-        stepsAbs = abs(points)
-        self.mustRun = True
-        while self.mustRun:
-            self.stepPin.on()
-            sleep(delay)
-            self.stepPin.off()
-            sleep(delay)
-            self.stepsDone += 1
-            if self.stepsDone >= stepsAbs:
-                break
+    def moveSync(self, points: int, speed: int):
+        delay = 1 / speed
+        self.motor.motor_run(self.pins, delay, abs(points), points < 0)
         self.running = False
 
 
 class Gantry:
-    def __init__(self, stepper1: Stepper, stepper2: Stepper, rangeX: int, rangeY: int, speed=1000, resolution: Stepper.Resolutions = Stepper.Resolutions.Eight):
+    def __init__(self, stepper1: Stepper, stepper2: Stepper, rangeX: int, rangeY: int, speed=1000):
         self.stepper1 = stepper1
         self.stepper2 = stepper2
         self.rangeX = rangeX
         self.rangeY = rangeY
         self.speed = speed
-        self.resolution = resolution
         self.posX = 0
         self.posY = 0
 
@@ -83,8 +49,8 @@ class Gantry:
         pointsY = self.rangeY * (percentY / 100)
         moveX = pointsX - self.posX
         moveY = pointsY - self.posY
-        self.stepper1.move(moveX, self.speed, self.resolution)
-        self.stepper2.move(moveY, self.speed, self.resolution)
+        self.stepper1.move(moveX, self.speed)
+        self.stepper2.move(moveY, self.speed)
         while self.stepper1.running or self.stepper2.running:
             sleep(0.05)
         self.posX += moveX
