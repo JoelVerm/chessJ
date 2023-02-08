@@ -28,7 +28,7 @@ def move_callback(fromx, fromy, tox, toy, capture):
     gantry.movePiece(fromx, fromy, tox, toy)
 
 
-arduinoSerial = Serial('/dev/ttyACM0', 9600, timeout=1)
+arduinoSerial = Serial('/dev/ttyUSB0', 9600, timeout=1)
 arduinoSerial.reset_input_buffer()
 gantry = createGantry()
 
