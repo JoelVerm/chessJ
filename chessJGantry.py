@@ -101,8 +101,8 @@ class ChessBoardGantry:
 def createGantry():
     return ChessBoardGantry(
         Gantry(
-            Stepper(5, 6, 13, 19, 26),
-            Stepper(2, 3, 14, 15, 18),
+            Stepper(6, 13, 19, 26),
+            Stepper(2, 3, 14, 15),
             1000, 1000
         ),
         OutputDevice(25),
