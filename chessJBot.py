@@ -7,22 +7,28 @@ HOST = 'LaptopJoel'
 PORT = 12321
 pcSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 pcSocket.connect((HOST, PORT))
+print("Connected to PC")
 
 
 def get_move():
     arduinoSerial.reset_input_buffer()
+    print("Reading moves")
     fx = fy = tx = ty = 0
     val = 1
     while val == 1:
         fy, fx, val = arduinoSerial.readline().decode('utf-8').split(' ')
+        print("From", fx, fy, val)
         fx, fy, val = int(fx), int(fy), int(val)
     while val == 0:
         ty, tx, val = arduinoSerial.readline().decode('utf-8').split(' ')
+        print("To", tx, ty, val)
         tx, ty, val = int(tx), int(ty), int(val)
     return fx, fy, tx, ty
 
 
 def move_callback(fromx, fromy, tox, toy, capture):
+    print(
+        f"Moving piece from {fromy} {fromx} to {toy} {tox}{' while capturing' if capture else ''}")
     if capture:
         gantry.removePiece(tox, toy)
     gantry.movePiece(fromx, fromy, tox, toy)
@@ -31,6 +37,7 @@ def move_callback(fromx, fromy, tox, toy, capture):
 arduinoSerial = Serial('/dev/ttyUSB0', 9600, timeout=1)
 arduinoSerial.reset_input_buffer()
 gantry = createGantry()
+print("Connected to Arduino")
 
 while True:
     cmd = pcSocket.recv(1024).decode('utf-8')
