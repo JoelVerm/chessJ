@@ -41,6 +41,7 @@ print("Connected to Arduino")
 
 while True:
     cmd = pcSocket.recv(1024).decode('utf-8')
+    print(f'Received command "{cmd}"')
     if cmd == 'q':
         break
     parts = cmd.split(' ')
