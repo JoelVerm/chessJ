@@ -104,8 +104,8 @@ def createGantry():
     return ChessBoardGantry(
         Gantry(
             Stepper(6, 13, 19, 26),
-            Stepper(2, 3, 14, 15),
-            1000, 1000
+            Stepper(2, 3, 23, 24),
+            950, 900
         ),
         OutputDevice(25),
         -0.3, 5
