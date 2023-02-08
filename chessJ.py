@@ -229,7 +229,7 @@ def get_ai_move(board: List[List[int]], model, ai_is_black):
         predictions[position] = -100
 
 
-def get_player_move(board: List[List[int]]):
+def get_player_move():
     while True:
         inp = input('next move > ')
         if inp.find('exit') >= 0 or inp.find('x') >= 0:
@@ -249,12 +249,7 @@ def get_player_move(board: List[List[int]]):
                 print(color_text(
                     f'Invalid input: position {move_to_str(fromx, fromy, tox, toy)} is not on the board', 160))
                 continue
-            if not is_valid_move(board, fromx, fromy, tox, toy):
-                print(color_text(
-                    f'Invalid input: {move_to_str(fromx, fromy, tox, toy)} is not a valid move', 160))
-                continue
-            else:
-                return fromx, fromy, tox, toy
+            return fromx, fromy, tox, toy
         except ValueError:
             print(color_text('Invalid input: input has the wrong size', 160))
             print('Format moves as a1a2')
@@ -283,9 +278,14 @@ def main(get_player_move, ai_callback_move):
     print_board(board)
     if ai_is_black:
         # Player
-        fromx, fromy, tox, toy = get_player_move(board)
-        if fromx is None:
-            return
+        while True:
+            fromx, fromy, tox, toy = get_player_move()
+            if fromx is None:
+                return
+            if is_valid_move(board, fromx, fromy, tox, toy):
+                break
+            print(color_text(
+                f'Invalid input: {move_to_str(fromx, fromy, tox, toy)} is not a valid move', 160))
         board[toy][tox] = board[fromy][fromx]
         board[fromy][fromx] = 0
         print_board(board)
@@ -298,9 +298,14 @@ def main(get_player_move, ai_callback_move):
         board[fromy][fromx] = 0
         print_board(board)
         # Player
-        fromx, fromy, tox, toy = get_player_move(board)
-        if fromx is None:
-            return
+        while True:
+            fromx, fromy, tox, toy = get_player_move()
+            if fromx is None:
+                return
+            if is_valid_move(board, fromx, fromy, tox, toy):
+                break
+            print(color_text(
+                f'Invalid input: {move_to_str(fromx, fromy, tox, toy)} is not a valid move', 160))
         board[toy][tox] = board[fromy][fromx]
         board[fromy][fromx] = 0
         print_board(board)
