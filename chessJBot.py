@@ -44,7 +44,7 @@ while True:
     print(f'Received command "{cmd}"')
     if cmd == 'q':
         break
-    parts = cmd.split(' ')
+    parts = [p.strip() for p in cmd.split(' ')]
     if parts[0] == 'get':
         fx, fy, tx, ty = get_move()
         res = f'{fx} {fy} {tx} {ty}\n'.encode('utf-8')
