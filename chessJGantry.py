@@ -105,8 +105,8 @@ def createGantry():
         Gantry(
             Stepper(6, 13, 19, 26),
             Stepper(24, 23, 3, 2),
-            950, 900
+            950, 900, 700
         ),
         OutputDevice(25),
-        -0.3, 5
+        -0.5, 2
     )
