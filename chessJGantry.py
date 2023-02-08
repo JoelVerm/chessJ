@@ -49,8 +49,8 @@ class Gantry:
         pointsY = self.rangeY * (percentY / 100)
         moveX = pointsX - self.posX
         moveY = pointsY - self.posY
-        move1 = moveX * 0.5 + moveY * -0.5
-        move2 = moveX * 0.5 + moveY * 0.5
+        move1 = moveX * 0.5 + moveY * 0.5
+        move2 = moveX * 0.5 + moveY * -0.5
         self.stepper1.move(move1, self.speed)
         self.stepper2.move(move2, self.speed)
         while self.stepper1.running or self.stepper2.running:
@@ -104,7 +104,7 @@ def createGantry():
     return ChessBoardGantry(
         Gantry(
             Stepper(6, 13, 19, 26),
-            Stepper(2, 3, 23, 24),
+            Stepper(24, 23, 3, 2),
             950, 900
         ),
         OutputDevice(25),
