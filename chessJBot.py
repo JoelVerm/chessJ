@@ -44,4 +44,4 @@ while True:
     elif parts[0] == 'move' or parts[0] == 'capture':
         move_callback(int(parts[1]), int(parts[2]),
                       int(parts[3]), int(parts[4]), parts[0] == 'capture')
-        pcSocket.send('\n')
+        pcSocket.send('\n'.encode('utf-8'))
