@@ -35,6 +35,8 @@ def get_move():
 def move_callback(fromx, fromy, tox, toy, capture):
     print(
         f"Moving piece from {fromy} {fromx} to {toy} {tox}{' while capturing' if capture else ''}")
+    fromy = 7 - fromy
+    toy = 7 - toy
     if capture:
         gantry.removePiece(tox, toy)
     gantry.movePiece(fromx, fromy, tox, toy)
