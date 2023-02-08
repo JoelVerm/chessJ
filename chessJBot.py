@@ -10,6 +10,7 @@ pcSocket.connect((HOST, PORT))
 
 
 def get_move():
+    arduinoSerial.reset_input_buffer()
     fx = fy = tx = ty = 0
     val = 1
     while val == 1:
