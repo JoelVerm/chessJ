@@ -18,7 +18,7 @@ print("""
 from math import lcm
 from typing import Iterable, List
 from chessJModel import create_model
-from chessJUtil import input_int, select_folder, iter_path
+from chessJUtil import input_int, select_folder, iter_path, move_to_str
 
 board_size = 8
 
@@ -212,10 +212,6 @@ def print_board(board: List[List[int]]) -> None:
         print(f' {8 - i}\n  ---------------------------------')
     print('    a   b   c   d   e   f   g   h  ')
     print()
-
-
-def move_to_str(fromx, fromy, tox, toy):
-    return f'{chr(fromx + 97)}{8 - fromy}{chr(tox + 97)}{8 - toy}'
 
 
 def get_ai_move(board: List[List[int]], model, ai_is_black):

@@ -1,4 +1,5 @@
 from chessJ import main as chessJ
+from chessJUtil import move_to_str
 import socket
 
 HOST = 'LaptopJoel'
@@ -19,6 +20,7 @@ def get_move():
     res = connection.recv(1024).decode('utf-8')
     fx, fy, tx, ty = res.split(' ')
     fx, fy, tx, ty = int(fx), int(fy), int(tx), int(ty)
+    print(f'You moved {move_to_str(fx, fy, tx, ty)}')
     return fx, fy, tx, ty
 
 

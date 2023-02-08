@@ -46,14 +46,15 @@ gantry = createGantry()
 print("Connected to Arduino")
 
 while True:
-    cmd = pcSocket.recv(1024).decode('utf-8')
+    cmd = pcSocket.recv(1024).decode('utf-8').strip()
     print(f'Received command "{cmd}"')
     if cmd == 'q':
         break
-    parts = [p.strip() for p in cmd.split(' ')]
+    parts = cmd.split(' ')
     if parts[0] == 'get':
         fx, fy, tx, ty = get_move()
         res = f'{fx} {fy} {tx} {ty}\n'.encode('utf-8')
+        print("Sent:", res)
         pcSocket.send(res)
     elif parts[0] == 'move' or parts[0] == 'capture':
         move_callback(int(parts[1]), int(parts[2]),

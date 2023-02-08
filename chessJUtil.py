@@ -43,3 +43,7 @@ def iter_path(fromx: int, fromy: int, tox: int, toy: int):
         fromy += stepy
         fromx += stepx
     return
+
+
+def move_to_str(fromx, fromy, tox, toy):
+    return f'{chr(fromx + 97)}{8 - fromy}{chr(tox + 97)}{8 - toy}'
