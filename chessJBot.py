@@ -17,11 +17,15 @@ def get_move():
     val = 1
     while val == 1:
         data = arduinoSerial.readline().decode('utf-8')
+        if not data:
+            continue
         print("From", data)
         fy, fx, val = data.split(' ')
         fx, fy, val = int(fx), int(fy), int(val)
     while val == 0:
         data = arduinoSerial.readline().decode('utf-8')
+        if not data:
+            continue
         print("To", data)
         ty, tx, val = data.split(' ')
         tx, ty, val = int(tx), int(ty), int(val)
