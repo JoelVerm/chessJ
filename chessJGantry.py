@@ -60,10 +60,10 @@ class Gantry:
 
 
 class ChessBoardGantry:
-    def __init__(self, gantry: Gantry, magnet: Servo, magnetDelta: float, removeX: float, removeY: float):
+    def __init__(self, gantry: Gantry, magnet: Servo, removeX: float, removeY: float):
         self.gantry = gantry
         self.magnet = magnet
-        self.magnetDelta = magnetDelta
+        self.magnet.value = -1
         self.removeX = removeX
         self.removeY = removeY
 
@@ -77,7 +77,7 @@ class ChessBoardGantry:
 
     def movePiece(self, fromx, fromy, tox, toy):
         self.moveToCell(fromx, fromy)
-        self.magnet.value += self.magnetDelta
+        self.magnet.value = 1
         dx = tox - fromx
         dy = toy - fromy
         if dx and dy:
@@ -95,7 +95,7 @@ class ChessBoardGantry:
                 self.moveToCell(tox, toy)
         else:
             self.moveToCell(tox, toy)
-        self.magnet.value -= self.magnetDelta
+        self.magnet.value = -1
 
     def removePiece(self, x, y):
         self.movePiece(x, y, self.removeX, self.removeY)
@@ -109,6 +109,5 @@ def createGantry():
             950, 900, 700
         ),
         Servo(25),
-        0.25,
         -0.5, 2
     )
